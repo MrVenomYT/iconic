@@ -1,7 +1,8 @@
 const BaseEvent = require("../../utils/structures/BaseEvent");
 const Discord = require('discord.js');
 const { users } = require("node-os-utils");
-
+const config = require('../../../slappey.json')
+const prefix = require('../../../slappey.json')
 const { Client } = require("discord.js");
 
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = class ReadyEvent extends BaseEvent {
     client.user
       .setPresence({
         activity: {
-          name: `-help | ${serverIn} servers. `,
+          name: `${config.prefix} | ${serverIn} servers. `,
           type: "WATCHING",
         },
         status: "online",
