@@ -43,7 +43,7 @@
     "md5": "^2.3.0",
     "memer-api": "^3.0.2",
     "moment": "^2.29.1",
-    "mongoose": "^5.11.14",
+    "mongoose": "^5.13.15",
     "nekos.life": "^2.0.7",
     "node-fetch": "^2.6.1",
     "node-os-utils": "^1.3.5",
