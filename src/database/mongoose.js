@@ -1,48 +1,37 @@
 const mongoose = require('mongoose');
-const MongoClient = require('mongoose');
-const config = require('../../slappey.json');
-// const PASS = require('../config');
-const PASS = require("../../slappey.json")
 
-module.exports={
-    init:() =>{
-
-const dbOptions = {
-
-    useNewUrlParser : true ,
-    useUnifiedTopology : true ,
-    autoIndex : true ,
-    poolSize : 5,
-    connectTimeoutMS:1000,
-    family : 4 
-
-};
-
-mongoose.connect(`mongodb+srv://iconic:${config.PASS}@iconic.2vmrj.mongodb.net/discordbot?retryWrites=true&w=majority` + `${dbOptions}` ,{useNewUrlParser: true, useUnifiedTopology: true })
-//mongoose.connect(`mongodb+srv://venombot:${config.PASS}@cluster0.2vmrj.mongodb.net/Iconic?retryWrites=true&w=majority ${dbOptions}`)
-    //   const uri = `mongodb+srv://iconic:${config.PASS}@iconic.2vmrj.mongodb.net/iconic?retryWrites=true&w=majority` + `${dbOptions}`
-// MongoClient.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true })
- mongoose.set('useFindAndModify' , false);
-mongoose.Promise = global.Promise;
-mongoose.connection.on('connected' , () =>{
-
-console.log('The Bot is connect To The Database');
-
+// Filter out Node 18+ DEP0170 warning triggered by MongoDB driver multi-host URL parsing
+process.on('warning', (warning) => {
+  if (warning.code === 'DEP0170') return;
 });
-mongoose.connection.on('disconnected' , () =>{
 
-    console.log('The Bot is disconnect from The Database');
-    
-    });
-    mongoose.connection.on('err' , (err) =>{
+module.exports = {
+  init: () => {
+    try {
+      mongoose.set('bufferCommands', false);
+      const uri = process.env.MONGODB_URI;
+      if (!uri) {
+        console.log('[Iconic Bot] No MONGODB_URI configured. Database running in memory mode.');
+        return;
+      }
+      mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 2000
+      }).then(() => {
+        console.log('The Bot is connected to the Database');
+      }).catch((err) => {
+        console.warn('[Iconic Bot] MongoDB offline:', err.message);
+      });
 
-        console.log('There is an error in connection to the database' + err);
-        
-        });
-         
-
-
-        
+      mongoose.connection.on('disconnected', () => {
+        console.log('The Bot is disconnected from the Database');
+      });
+      mongoose.connection.on('error', (err) => {
+        console.warn('Database connection notice:', err.message);
+      });
+    } catch (e) {
+      console.warn('[Iconic Bot] Database initialization notice:', e.message);
     }
-
-}
+  }
+};

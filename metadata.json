@@ -1,0 +1,6 @@
+{
+  "name": "Iconic Discord Bot",
+  "description": "Multi-purpose Discord bot with 60+ commands for fun, moderation, tools, utility, and information, featuring an interactive web dashboard and command simulator.",
+  "permissions": [],
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
